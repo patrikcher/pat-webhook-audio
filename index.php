@@ -1,0 +1,34 @@
+<?php 
+
+$method = $_SERVER['REQUEST_METHOD'];
+
+// Process only when method is POST
+if($method == 'POST'){
+	$requestBody = file_get_contents('php://input');
+	
+	$json = json_decode($requestBody);
+
+	$text = $json->result->parameters->Review;
+
+	switch ($text) {
+		case 'review':
+			$speech = "<speak><audio src="https://actions.google.com/sounds/v1/cartoon/slide_whistle.ogg">did not get your audio file</audio></speak>";
+			break;
+		
+		default:
+			$speech = "Sorry, I didnt get that.";
+			break;
+	}
+
+	$response = new \stdClass();
+	$response->speech = $speech;
+	$response->displayText = $speech;
+	$response->source = "webhook";
+	echo json_encode($response);
+}
+else
+{
+	echo "Method not allowed";
+}
+
+?>
